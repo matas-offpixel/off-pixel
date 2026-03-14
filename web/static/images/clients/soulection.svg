@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 44" fill="none">
+  <ellipse cx="100" cy="14" rx="28" ry="10" stroke="#1e1810" stroke-width="1.5" fill="none"/>
+  <path d="M100 8c-4 0-8 2-8 6s4 6 8 6 8-2 8-6-4-6-8-6z" fill="#1e1810"/>
+  <text x="100" y="38" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.15em" fill="#1e1810">SOULECTION</text>
+</svg>

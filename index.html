@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>OFF / PIXEL — Marketing, executed differently.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { font-size: 18px; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+      background: #F0C9A8;
+      color: #1e1810;
+      font-family: 'Bebas Neue', sans-serif;
+      padding: 4rem 4rem 5rem;
+      overflow-x: hidden;
+    }
+
+    .corner {
+      position: fixed;
+      font-family: system-ui, sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+    .corner a {
+      color: #1e1810;
+      text-decoration: none;
+      opacity: 0.6;
+    }
+    .corner a:hover { opacity: 1; }
+
+    .corner-contact { bottom: 4rem; right: 4rem; }
+    .contact-trigger {
+      cursor: pointer;
+      color: #1e1810;
+      opacity: 0.6;
+      background: none;
+      border: none;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      padding: 0;
+    }
+    .contact-trigger:hover { opacity: 1; }
+    .contact-reveal {
+      position: fixed;
+      bottom: 5.5rem;
+      right: 4rem;
+      width: 100%;
+      max-width: 28rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      z-index: 3;
+    }
+    .corner-contact:hover .contact-reveal,
+    .contact-reveal:hover,
+    .contact-reveal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .contact-reveal-box {
+      padding: 2rem 2.25rem;
+      background: #F0C9A8;
+      border: 1px solid rgba(30, 24, 16, 0.15);
+      box-shadow: 0 0.5rem 2rem rgba(30, 24, 16, 0.06);
+      font-family: system-ui, sans-serif;
+    }
+    .corner-services {
+      bottom: 4rem;
+      left: 4rem;
+      color: #1e1810;
+      z-index: 1;
+    }
+    .services-row {
+      display: contents;
+    }
+    .corner-services:has(.service-trigger:hover),
+    .corner-services:has(.service-reveal:hover) {
+      z-index: 9999;
+    }
+    .service-item {
+      display: inline;
+    }
+    .service-trigger {
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+    }
+    .service-trigger:hover {
+      opacity: 1;
+    }
+    .services-sep {
+      opacity: 0.5;
+    }
+    .service-reveal {
+      position: fixed;
+      bottom: 5.5rem;
+      left: 4rem;
+      padding: 1.25rem 1.5rem;
+      background: #F0C9A8;
+      border: 1px solid rgba(30, 24, 16, 0.15);
+      box-shadow: 0 0.5rem 2rem rgba(30, 24, 16, 0.06);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 9999;
+      transform: translateY(0.5rem) scale(0.98);
+    }
+    .service-item:hover .service-reveal,
+    .service-reveal:hover,
+    .service-reveal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+    .service-reveal-list {
+      margin: 0;
+      padding: 0 0 0 1.25rem;
+      list-style: disc;
+      font-family: system-ui, sans-serif;
+      font-size: 0.7rem;
+      line-height: 1.6;
+      color: #1e1810;
+    }
+    .service-reveal-list li {
+      margin-bottom: 0.35rem;
+    }
+    .service-reveal-list li:last-child {
+      margin-bottom: 0;
+    }
+    .corner-clients:has(.founders-name-matas-wrap:hover),
+    .corner-clients:has(.matas-about:hover),
+    .corner-clients:has(.matas-about.is-open),
+    .corner-clients:has(.founders-name-sarah-wrap:hover),
+    .corner-clients:has(.sarah-reveal:hover),
+    .corner-clients:has(.sarah-reveal.is-open) {
+      z-index: 9999;
+    }
+    .work-founders-wrap { display: inline; }
+    .work-founders-trigger {
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      color: #1e1810;
+      opacity: 0.6;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      transition: opacity 0.2s ease;
+    }
+    .work-founders-trigger:hover {
+      opacity: 1;
+    }
+    .founders-reveal {
+      position: fixed;
+      top: 6.75rem;
+      right: 4rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .work-founders-wrap:hover .founders-reveal,
+    .corner-clients:has(.founders-reveal:hover) .founders-reveal,
+    .founders-reveal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .founders-fork-svg {
+      display: block;
+      width: 7rem;
+      height: auto;
+      stroke: #1e1810;
+      stroke-width: 1;
+      stroke-linecap: round;
+      opacity: 0.6;
+    }
+    .founders-names {
+      display: flex;
+      justify-content: space-between;
+      width: 7rem;
+      margin-top: 0.25rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: #1e1810;
+    }
+    .founders-name {
+      text-transform: uppercase;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+    }
+    .founders-name-matas-wrap:hover .founders-name,
+    .founders-name-matas-wrap .founders-name:hover {
+      opacity: 1;
+    }
+    .founders-name-sarah-wrap:hover .founders-name,
+    .founders-name-sarah-wrap .founders-name:hover {
+      opacity: 1;
+    }
+    .founders-name-matas-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .founders-name-matas-wrap .founders-name {
+      cursor: pointer;
+    }
+    .matas-about {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 0.5rem;
+      width: max-content;
+      max-width: min(42rem, calc(100vw - 2rem));
+      padding: 1.5rem 1.75rem;
+      background: #F0C9A8;
+      border: 1px solid rgba(30, 24, 16, 0.15);
+      box-shadow: 0 0.5rem 2rem rgba(30, 24, 16, 0.06);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      z-index: 9999;
+      max-height: calc(100vh - 10rem);
+      overflow-y: auto;
+      font-family: system-ui, sans-serif;
+      font-size: 0.65rem;
+      text-transform: none;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 1rem 1.5rem;
+      align-items: start;
+      transform: translateX(var(--nudge-x, 0));
+    }
+    .founders-name-matas-wrap:hover .matas-about,
+    .matas-about:hover,
+    .matas-about.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(var(--nudge-x, 0));
+      pointer-events: auto;
+    }
+    .matas-about-top-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+    .matas-about-photo {
+      width: 14rem;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 1;
+    }
+    .matas-about-bio {
+      grid-column: 2;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .matas-about-name {
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1e1810;
+      margin: 0 0 0.5rem 0;
+      text-transform: uppercase;
+      opacity: 1;
+    }
+    .matas-about-bio p {
+      margin: 0 0 0.5rem 0;
+    }
+    .matas-about-bio p:last-of-type {
+      margin-bottom: 0;
+    }
+    .matas-about-heading {
+      grid-column: 1 / -1;
+      font-size: 0.58rem;
+      font-weight: bold;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #1e1810;
+      margin: 0;
+      opacity: 1;
+    }
+    .matas-about-case-study {
+      grid-column: 1 / -1;
+      min-width: 0;
+    }
+    .matas-about-case-study p {
+      margin: 0 0 0.5rem 0;
+    }
+    .matas-about-case-study p:last-of-type {
+      margin-bottom: 0;
+    }
+    .matas-about-disclaimer {
+      grid-column: 1 / -1;
+      font-size: 0.55rem;
+      font-style: italic;
+      color: #1e1810;
+      margin: 0.5rem 0 0 0;
+      opacity: 1;
+    }
+    .matas-about p,
+    .sarah-reveal p {
+      font-size: 0.6rem;
+      line-height: 1.45;
+      color: #1e1810;
+      opacity: 1;
+    }
+    .corner-clients {
+      top: 4rem;
+      right: 4rem;
+      z-index: 2;
+    }
+    .work-label,
+    .work-sep,
+    .work-events-trigger,
+    .work-data-trigger,
+    .work-founders-trigger {
+      color: #1e1810;
+      opacity: 0.6;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+    }
+    .work-events-wrap,
+    .work-data-wrap,
+    .work-founders-wrap { display: inline; }
+    .work-events-trigger,
+    .work-data-trigger,
+    .work-founders-trigger {
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .work-events-trigger:hover,
+    .work-data-trigger:hover,
+    .work-founders-trigger:hover { opacity: 1; }
+
+    .clients-reveal,
+    .data-reveal {
+      position: fixed;
+      top: 5.5rem;
+      right: 0;
+      padding: 2rem 2.5rem;
+      background: #F0C9A8;
+      border: 1px solid rgba(30, 24, 16, 0.1);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-0.5rem) scale(0.98);
+      transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 100;
+      pointer-events: none;
+    }
+    .clients-reveal {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      gap: 1.5rem 2.25rem;
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+    }
+    .work-events-wrap:hover .clients-reveal,
+    .clients-reveal:hover {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .data-reveal {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      max-width: 22rem;
+    }
+    .work-data-wrap:hover .data-reveal,
+    .data-reveal:hover {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .sarah-reveal {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.5rem;
+      width: max-content;
+      max-width: min(42rem, calc(100vw - 2rem));
+      padding: 1.5rem 1.75rem;
+      background: #F0C9A8;
+      border: 1px solid rgba(30, 24, 16, 0.15);
+      box-shadow: 0 0.5rem 2rem rgba(30, 24, 16, 0.06);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 9999;
+      max-height: calc(100vh - 10rem);
+      overflow-y: auto;
+      font-family: system-ui, sans-serif;
+      font-size: 0.65rem;
+      text-transform: none;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 1rem 1.5rem;
+      align-items: start;
+      transform: translateY(-0.5rem) translateX(var(--nudge-x, 0)) scale(0.98);
+    }
+    .founders-name-sarah-wrap:hover .sarah-reveal,
+    .sarah-reveal:hover,
+    .sarah-reveal.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) translateX(var(--nudge-x, 0)) scale(1);
+      pointer-events: auto;
+    }
+    .founders-name-sarah-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .founders-name-sarah-wrap .founders-name {
+      cursor: pointer;
+    }
+    .data-reveal-heading {
+      font-family: system-ui, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #1e1810;
+      opacity: 0.5;
+      margin: 0 0 0.25rem 0;
+    }
+    .data-reveal-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem 2rem;
+      align-items: center;
+    }
+    .data-reveal-logos img {
+      height: 2.5rem;
+      width: auto;
+      max-width: 10rem;
+      object-fit: contain;
+      filter: brightness(0);
+      opacity: 0.8;
+    }
+    .data-reveal-footer {
+      font-family: system-ui, sans-serif;
+      font-size: 0.75rem;
+      line-height: 1.45;
+      color: #1e1810;
+      opacity: 0.7;
+      margin: 0;
+    }
+    .clients-reveal-heading {
+      grid-column: 1 / -1;
+      font-family: system-ui, sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #1e1810;
+      opacity: 0.5;
+      margin-bottom: 0.25rem;
+    }
+    .clients-reveal img {
+      height: 2.5rem;
+      width: auto;
+      max-width: 10rem;
+      object-fit: contain;
+      object-position: center;
+      filter: brightness(0);
+      opacity: 0.8;
+      transform: translateY(0.5rem);
+      opacity: 0;
+      animation: clientLogoIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .corner-clients:hover .clients-reveal img,
+    .clients-reveal:hover img {
+      animation: clientLogoIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .clients-reveal img:nth-child(2) { animation-delay: 0.02s; }
+    .clients-reveal img:nth-child(3) { animation-delay: 0.05s; }
+    .clients-reveal img:nth-child(4) { animation-delay: 0.08s; }
+    .clients-reveal img:nth-child(5) { animation-delay: 0.11s; }
+    .clients-reveal img:nth-child(6) { animation-delay: 0.14s; }
+    .clients-reveal img:nth-child(7) { animation-delay: 0.17s; }
+    .clients-reveal img:nth-child(8) { animation-delay: 0.20s; }
+    .clients-reveal img:nth-child(9) { animation-delay: 0.23s; }
+    .clients-reveal img:nth-child(10) { animation-delay: 0.26s; }
+    .clients-reveal img:nth-child(11) { animation-delay: 0.29s; }
+    .clients-reveal img:nth-child(12) { animation-delay: 0.32s; }
+    .clients-reveal img:nth-child(13) { animation-delay: 0.35s; }
+    .clients-reveal img:nth-child(14) { animation-delay: 0.38s; }
+    .clients-reveal img:nth-child(15) { animation-delay: 0.41s; }
+    .clients-reveal img:nth-child(16) { animation-delay: 0.44s; }
+    .clients-reveal img:nth-child(17) { animation-delay: 0.47s; }
+    .clients-reveal img:nth-child(18) { animation-delay: 0.50s; }
+    .clients-reveal img:nth-child(19) { animation-delay: 0.53s; }
+    .clients-reveal img:nth-child(20) { animation-delay: 0.56s; }
+    .clients-reveal img:nth-child(21) { animation-delay: 0.59s; }
+    .clients-reveal img:nth-child(22) { animation-delay: 0.62s; }
+    .clients-reveal img:nth-child(23) { animation-delay: 0.65s; }
+    .clients-reveal img:nth-child(24) { animation-delay: 0.68s; }
+    .clients-reveal img:nth-child(25) { animation-delay: 0.71s; }
+    .clients-reveal img:nth-child(26) { animation-delay: 0.74s; }
+    .clients-reveal img:nth-child(27) { animation-delay: 0.77s; }
+    .clients-reveal img:nth-child(28) { animation-delay: 0.80s; }
+    .clients-reveal img:nth-child(29) { animation-delay: 0.83s; }
+    @keyframes clientLogoIn {
+      from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+      }
+      to {
+        opacity: 0.8;
+        transform: translateY(0);
+      }
+    }
+
+    .main {
+      position: absolute;
+      top: 4rem;
+      left: 4rem;
+      max-width: 42rem;
+      z-index: 0;
+    }
+    .logo {
+      font-size: clamp(4.5rem, 15vw, 12rem);
+      line-height: 0.9;
+      white-space: nowrap;
+      letter-spacing: -0.015em;
+      margin-bottom: 1.5rem;
+      animation: logoIn 1s ease-out both;
+    }
+    .logo-off {
+      color: transparent;
+      -webkit-text-stroke: 0.032em #1e1810;
+      display: inline-block;
+    }
+    .logo-slash { color: #c4a882; display: inline-block; }
+    .logo-pixel { color: #1e1810; display: inline-block; }
+    @keyframes logoIn {
+      from { opacity: 0; transform: translateY(0.4em); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tagline {
+      font-family: system-ui, sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #1e1810;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+      max-width: 32ch;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      animation: taglineIn 1s ease-out 0.3s both;
+    }
+    .tagline-sub {
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #1e1810;
+      opacity: 0.6;
+      line-height: 1.45;
+      max-width: 36ch;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      animation: taglineIn 1s ease-out 0.45s both;
+    }
+    @keyframes taglineIn {
+      from { opacity: 0; transform: translateY(0.3em); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .contact-reveal .contact-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #1e1810;
+      margin-bottom: 1.5rem;
+    }
+    .contact-form label {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #1e1810;
+      opacity: 0.7;
+      margin-bottom: 0.35rem;
+    }
+    .contact-form input,
+    .contact-form select,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.6rem 0;
+      margin-bottom: 1.25rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: #1e1810;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(30, 24, 16, 0.25);
+      resize: vertical;
+      min-height: 2.5rem;
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: #1e1810;
+      opacity: 0.4;
+    }
+    .contact-form input:focus,
+    .contact-form select:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-bottom-color: #1e1810;
+    }
+    .contact-form textarea {
+      min-height: 4rem;
+    }
+    .contact-form button {
+      margin-top: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-family: system-ui, sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #1e1810;
+      background: transparent;
+      border: 1px solid #1e1810;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .contact-form button:hover {
+      background: #1e1810;
+      color: #F0C9A8;
+    }
+
+    /* Narrow viewport: ensure tagline wraps */
+    @media (max-width: 770px) {
+      .main {
+        max-width: 100%;
+      }
+      .tagline {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+      .tagline-sub {
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+    }
+
+    /* Mobile & tablet */
+    @media (max-width: 768px) {
+      html { font-size: 16px; }
+      body {
+        padding: 1.5rem 1.25rem 6rem;
+        padding-left: calc(1.25rem + env(safe-area-inset-left, 0px));
+        padding-right: calc(1.25rem + env(safe-area-inset-right, 0px));
+        padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+      }
+      .main {
+        position: static;
+        max-width: none;
+        width: 100%;
+        padding-top: 4rem; /* clear fixed Work corner */
+      }
+      .logo {
+        display: block;
+        width: 100%;
+        font-size: clamp(3.25rem, 14vw, 7rem);
+        white-space: normal;
+        word-break: break-word;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+      .tagline {
+        font-size: 0.85rem;
+        letter-spacing: 0.15em;
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+      .corner-contact {
+        bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+        right: calc(1.25rem + env(safe-area-inset-right, 0px));
+      }
+      .contact-reveal {
+        bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+        right: calc(1.25rem + env(safe-area-inset-right, 0px));
+        left: calc(1.25rem + env(safe-area-inset-left, 0px));
+        max-width: none;
+        width: calc(100vw - 2.5rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+      }
+      .contact-reveal-box {
+        padding: 1.5rem 1.25rem;
+      }
+      .corner-services {
+        bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+        left: calc(1.25rem + env(safe-area-inset-left, 0px));
+        right: calc(1.25rem + env(safe-area-inset-right, 0px));
+        font-size: 0.6rem;
+        letter-spacing: 0.15em;
+        max-width: calc(100vw - 2.5rem);
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .services-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .corner-services .service-item {
+        display: inline;
+      }
+      .service-reveal {
+        bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+        left: calc(1.25rem + env(safe-area-inset-left, 0px));
+        right: calc(1.25rem + env(safe-area-inset-right, 0px));
+        width: calc(100vw - 2.5rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+        max-width: none;
+        padding: 1rem 1.25rem;
+      }
+      .service-reveal-list {
+        font-size: 0.65rem;
+      }
+      .corner-clients {
+        top: calc(1.25rem + env(safe-area-inset-top, 0px));
+        right: calc(1.25rem + env(safe-area-inset-right, 0px));
+        left: calc(1.25rem + env(safe-area-inset-left, 0px));
+        font-size: 0.6rem;
+        letter-spacing: 0.15em;
+        max-width: calc(100vw - 2.5rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+      }
+      .work-label,
+      .work-sep,
+      .work-events-trigger,
+      .work-data-trigger,
+      .work-founders-trigger {
+        font-size: inherit;
+      }
+      .clients-reveal,
+      .data-reveal {
+        top: 4rem;
+        left: 1.25rem;
+        right: 1.25rem;
+        width: calc(100vw - 2.5rem);
+        max-width: none;
+        padding: 1.25rem 1.5rem;
+        max-height: calc(100vh - 6rem);
+      }
+      .clients-reveal {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem 1.25rem;
+      }
+      .clients-reveal img {
+        max-width: 8rem;
+      }
+      .data-reveal {
+        max-width: none;
+      }
+      .work-founders-wrap {
+        position: relative;
+      }
+      .founders-reveal {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: auto;
+        margin-top: 0.25rem;
+        width: auto;
+        max-width: none;
+      }
+      .founders-fork-svg {
+        width: 5rem;
+      }
+      .founders-names {
+        width: 5rem;
+        font-size: 0.55rem;
+        gap: 0.75rem;
+        justify-content: space-between;
+      }
+      .matas-about,
+      .sarah-reveal {
+        left: 1.25rem;
+        right: 1.25rem;
+        width: calc(100vw - 2.5rem);
+        max-width: none;
+        padding: 1.25rem 1rem;
+        font-size: 0.6rem;
+      }
+      .matas-about-top-row {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 1rem;
+      }
+      .matas-about-photo {
+        width: 100%;
+        max-height: 12rem;
+        min-height: 8rem;
+        height: auto;
+        object-fit: cover;
+        display: block;
+      }
+      .matas-about-bio {
+        grid-column: 1;
+      }
+      .contact-form input,
+      .contact-form select,
+      .contact-form textarea {
+        min-height: 2.75rem;
+        font-size: 16px; /* prevents zoom on focus in iOS */
+      }
+      .contact-form button {
+        min-height: 2.75rem;
+        padding: 0.85rem 1.25rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem;
+        padding-left: calc(1rem + env(safe-area-inset-left, 0px));
+        padding-right: calc(1rem + env(safe-area-inset-right, 0px));
+        padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+      }
+      .main {
+        padding-top: 3.5rem;
+        width: 100%;
+      }
+      .logo {
+        display: block;
+        width: 100%;
+        font-size: clamp(3rem, 18vw, 5rem);
+      }
+      .tagline {
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+      }
+      .corner-contact,
+      .corner-services,
+      .corner-clients {
+        font-size: 0.55rem;
+        letter-spacing: 0.12em;
+      }
+      .corner-contact {
+        bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+        right: calc(1rem + env(safe-area-inset-right, 0px));
+      }
+      .corner-services {
+        bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+        left: calc(1rem + env(safe-area-inset-left, 0px));
+        right: calc(1rem + env(safe-area-inset-right, 0px));
+      }
+      .corner-clients {
+        top: calc(1rem + env(safe-area-inset-top, 0px));
+        left: calc(1rem + env(safe-area-inset-left, 0px));
+        right: calc(1rem + env(safe-area-inset-right, 0px));
+      }
+      .contact-reveal {
+        bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+        right: calc(1rem + env(safe-area-inset-right, 0px));
+        left: calc(1rem + env(safe-area-inset-left, 0px));
+        width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+      }
+      .service-reveal {
+        bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+        left: calc(1rem + env(safe-area-inset-left, 0px));
+        right: calc(1rem + env(safe-area-inset-right, 0px));
+        width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+      }
+      .clients-reveal,
+      .data-reveal {
+        top: calc(3.5rem + env(safe-area-inset-top, 0px));
+        left: calc(1rem + env(safe-area-inset-left, 0px));
+        right: calc(1rem + env(safe-area-inset-right, 0px));
+        width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+        padding: 1rem 1.25rem;
+      }
+      .clients-reveal {
+        grid-template-columns: 1fr;
+      }
+      .founders-fork-svg {
+        width: 4rem;
+      }
+      .founders-names {
+        width: 4rem;
+        font-size: 0.5rem;
+        gap: 0.5rem;
+      }
+      .matas-about,
+      .sarah-reveal {
+        left: 1rem;
+        right: 1rem;
+        width: calc(100vw - 2rem);
+        padding: 1rem;
+      }
+      .matas-about-photo {
+        min-height: 6rem;
+      }
+      .service-trigger,
+      .work-events-trigger,
+      .work-data-trigger,
+      .work-founders-trigger,
+      .contact-trigger {
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 0.25rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo { animation: logoIn 0.5s ease-out both; }
+      .tagline, .tagline-sub { animation: taglineIn 0.3s ease-out both; }
+      .clients-reveal img { animation: none; opacity: 0.75; transform: none; }
+      .data-reveal-logos img { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="corner corner-contact">
+    <button type="button" class="contact-trigger" aria-expanded="false" aria-controls="contact-reveal" id="contact-trigger">Contact</button>
+    <div class="contact-reveal" id="contact-reveal" aria-hidden="true">
+      <div class="contact-reveal-box">
+        <h2 class="contact-heading">Contact</h2>
+        <form class="contact-form" id="contact-form">
+          <label for="contact-name">Name</label>
+          <input type="text" id="contact-name" name="name" placeholder="Your name" required>
+          <label for="contact-company">Company</label>
+          <input type="text" id="contact-company" name="company" placeholder="Company name">
+          <label for="contact-url">Website or Instagram URL</label>
+          <input type="url" id="contact-url" name="url" placeholder="https://…">
+          <label for="contact-budget">Project Budget</label>
+          <select id="contact-budget" name="budget">
+            <option value="">Select range</option>
+            <option value="Under £5k">Under £5k</option>
+            <option value="£5k – £15k">£5k – £15k</option>
+            <option value="£15k – £50k">£15k – £50k</option>
+            <option value="£50k+">£50k+</option>
+          </select>
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" placeholder="Tell us about your project" required></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="corner corner-services">
+    <div class="services-row services-row-1">
+      <div class="service-item">
+        <span class="service-trigger" id="strategy-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="strategy-reveal">Strategy</span>
+        <div class="service-reveal" id="strategy-reveal" aria-hidden="true">
+          <ul class="service-reveal-list">
+            <li>Audience &amp; market segmentation</li>
+            <li>Pre-sale and launch strategy</li>
+            <li>Always-on campaign strategy</li>
+            <li>Brand building &amp; awareness campaigns</li>
+            <li>Sales acceleration &amp; demand spikes</li>
+          </ul>
+        </div>
+      </div>
+      <span class="services-sep"> · </span>
+      <div class="service-item">
+        <span class="service-trigger" id="paid-media-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="paid-media-reveal">Paid Media</span>
+        <div class="service-reveal" id="paid-media-reveal" aria-hidden="true">
+          <ul class="service-reveal-list">
+            <li>Meta (Facebook &amp; Instagram)</li>
+            <li>TikTok</li>
+            <li>Google &amp; YouTube</li>
+            <li>Snapchat</li>
+            <li>X (Twitter)</li>
+          </ul>
+        </div>
+      </div>
+      <span class="services-sep"> · </span>
+      <div class="service-item">
+        <span class="service-trigger" id="d2c-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="d2c-reveal">D2C</span>
+        <div class="service-reveal" id="d2c-reveal" aria-hidden="true">
+          <ul class="service-reveal-list">
+            <li>Email marketing</li>
+            <li>SMS &amp; WhatsApp engagement</li>
+            <li>CRM lifecycle journeys</li>
+            <li>Audience data capture &amp; segmentation</li>
+            <li>Community growth &amp; retention</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="services-row services-row-2">
+      <div class="service-item">
+        <span class="service-trigger" id="creative-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="creative-reveal">Creative</span>
+      <div class="service-reveal" id="creative-reveal" aria-hidden="true">
+        <ul class="service-reveal-list">
+          <li>Campaign concept development</li>
+          <li>Performance-led creative ideation</li>
+          <li>UGC-driven creative variation</li>
+          <li>Template-based rapid iteration</li>
+          <li>Trend-driven creative innovation</li>
+        </ul>
+      </div>
+      </div>
+      <span class="services-sep"> · </span>
+      <div class="service-item">
+        <span class="service-trigger" id="data-service-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="data-service-reveal">Data</span>
+        <div class="service-reveal" id="data-service-reveal" aria-hidden="true">
+          <ul class="service-reveal-list">
+            <li>Marketing performance analytics</li>
+            <li>Data modelling &amp; attribution insights</li>
+            <li>Looker / modern BI tools</li>
+            <li>Customer data strategy</li>
+            <li>AI-assisted marketing insights</li>
+          </ul>
+        </div>
+      </div>
+      <span class="services-sep"> · </span>
+      <div class="service-item">
+        <span class="service-trigger" id="governance-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="governance-reveal">Governance</span>
+        <div class="service-reveal" id="governance-reveal" aria-hidden="true">
+          <ul class="service-reveal-list">
+            <li>Data governance frameworks</li>
+            <li>Data quality &amp; lineage standards</li>
+            <li>Enterprise data dictionaries</li>
+            <li>Regulatory data compliance</li>
+            <li>Data ownership &amp; accountability models</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="corner corner-clients">
+    <span class="work-label">Work: </span>
+    <div class="work-events-wrap">
+      <span class="work-events-trigger" id="events-trigger" aria-expanded="false" aria-controls="clients-reveal" role="button" tabindex="0">Events</span>
+      <div class="clients-reveal work-events-reveal" id="clients-reveal" aria-hidden="true">
+        <p class="clients-reveal-heading">Proud to have worked with</p>
+        <img src="images/clients/bwl-presents.svg" alt="BWL Presents" width="200" height="42">
+        <img src="images/clients/drumsheds.svg" alt="Drumsheds" width="300" height="30">
+        <img src="images/clients/swi.svg" alt="SWI" width="200" height="58">
+        <img src="images/clients/louder.svg" alt="Louder" width="200" height="36">
+        <img src="images/clients/live-nation.svg" alt="Live Nation" width="200" height="42">
+        <img src="images/clients/anyma.svg" alt="Anyma" width="200" height="42">
+        <img src="images/clients/lwe.svg" alt="LWE" width="200" height="42">
+        <img src="images/clients/wah.svg" alt="Wah" width="200" height="42">
+        <img src="images/clients/boundary.svg" alt="Boundary" width="200" height="42">
+        <img src="images/clients/day-zero.svg" alt="Day Zero" width="200" height="42">
+        <img src="images/clients/defected.svg" alt="Defected" width="200" height="42">
+        <img src="images/clients/dhb.svg" alt="DHB" width="200" height="42">
+        <img src="images/clients/e1.svg" alt="E1" width="200" height="42">
+        <img src="images/clients/eastenderz.svg" alt="Eastenderz" width="200" height="42">
+        <img src="images/clients/ee.svg" alt="EE" width="200" height="42">
+        <img src="images/clients/high-lights.svg" alt="High Lights" width="200" height="42">
+        <img src="images/clients/jackies.svg" alt="Jackies" width="200" height="42">
+        <img src="images/clients/maiden-voyage.svg" alt="Maiden Voyage" width="200" height="42">
+        <img src="images/clients/mos.svg" alt="MOS" width="200" height="42">
+        <img src="images/clients/nexup.svg" alt="Nexup" width="200" height="42">
+        <img src="images/clients/one-life.svg" alt="One Life" width="200" height="42">
+        <img src="images/clients/origins.svg" alt="Origins" width="200" height="42">
+        <img src="images/clients/paradise.svg" alt="Paradise" width="200" height="42">
+        <img src="images/clients/perplex.svg" alt="Perplex" width="200" height="42">
+        <img src="images/clients/prospect.svg" alt="Prospect" width="200" height="42">
+        <img src="images/clients/77.svg" alt="77" width="200" height="42">
+        <img src="images/clients/tokyonights.svg" alt="Tokyo Nights" width="200" height="42">
+        <img src="images/clients/4thefans.svg" alt="4 The Fans" width="200" height="42">
+      </div>
+    </div>
+    <span class="work-sep"> · </span>
+    <div class="work-data-wrap">
+      <span class="work-data-trigger" id="data-trigger" aria-expanded="false" aria-controls="data-reveal" role="button" tabindex="0">Data</span>
+      <div class="data-reveal" id="data-reveal" aria-hidden="true">
+        <p class="data-reveal-heading">Proud to have worked with</p>
+        <div class="data-reveal-logos">
+          <img src="images/clients/google.svg" alt="Google" width="200" height="42">
+          <img src="images/clients/datatonic.svg" alt="Datatonic" width="200" height="42">
+        </div>
+        <p class="data-reveal-footer">Specialist expertise supporting global luxury brands and financial institutions.</p>
+      </div>
+    </div>
+    <span class="work-sep"> · </span>
+    <div class="work-founders-wrap">
+      <span class="work-founders-trigger" id="founders-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="founders-reveal">Founders</span>
+      <div class="founders-reveal" id="founders-reveal" aria-hidden="true">
+      <svg class="founders-fork-svg" viewBox="0 0 80 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M40 0v16 M40 16L8 44 M40 16L72 44" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="founders-names">
+        <div class="founders-name-matas-wrap">
+          <span class="founders-name">Matas</span>
+          <div class="matas-about" aria-hidden="true">
+            <div class="matas-about-top-row">
+              <img class="matas-about-photo" src="images/matas.svg" alt="Matas">
+              <div class="matas-about-bio">
+                <h3 class="matas-about-name">Matas Liebus</h3>
+                <p>Matas is a marketing strategist specialising in data-driven growth across the events, entertainment and experience economy. With over ten years of experience designing and executing high-performance campaigns, he helps promoters, venues and brands translate marketing investment into measurable results. His approach blends paid media strategy, D2C engagement and creative execution, enabling campaigns to launch strong, scale efficiently and build lasting audience relationships.</p>
+                <p>Across his career, Matas has delivered 1,000+ end-to-end campaigns, working at the intersection of performance marketing, brand equity and community growth. His work focuses on building marketing systems that drive immediate impact while strengthening the long-term value of the brands behind them.</p>
+              </div>
+            </div>
+            <p class="matas-about-heading">Selected Case Study</p>
+            <div class="matas-about-case-study">
+              <p>In 2025, Matas led the delivery of 54 end-to-end marketing campaigns for the Broadwick Live Presents programme, driving 100,000+ ticket sales and generating approximately £4,000,000 in gross ticket revenue across London venues including Magazine London, O2 Academy Brixton and Roundhouse.</p>
+              <p>Working across a portfolio of headliner-driven electronic music events, he was responsible for campaign strategy, paid media execution and performance optimisation, alongside the development of supporting marketing infrastructure including data capture systems, CRM engagement and D2C communication via email and WhatsApp.</p>
+              <p>The programme achieved a 70%+ sell-out rate, demonstrating the effectiveness of a data-driven marketing approach combined with agile creative execution aligned to emerging platform trends.</p>
+            </div>
+            <p class="matas-about-disclaimer">Work delivered by Matas in a previous role.</p>
+          </div>
+        </div>
+        <div class="founders-name-sarah-wrap">
+          <span class="founders-name">Sarah</span>
+          <div class="sarah-reveal" aria-hidden="true">
+            <div class="matas-about-top-row">
+              <img class="matas-about-photo" src="images/sarah.svg" alt="Sarah">
+              <div class="matas-about-bio">
+                <h3 class="matas-about-name">Sarah Hussain</h3>
+                <p>Sarah is a technical trainer and data specialist with deep expertise across cloud technologies, data governance and modern analytics infrastructure. She holds four Google certifications, including Cloud Digital Leader, Professional Data Engineer, Professional Machine Learning Engineer and Google Authorized Trainer, and has built her career helping organisations understand and apply modern data platforms effectively.</p>
+                <p>She specialises in developing training programmes, technical learning paths and hands-on labs, delivering instructor-led training to organisations ranging from global banks to fast-growing technology companies. Across Europe and the Middle East, Sarah has trained 2,000+ learners on topics including data modelling, Looker, dbt, machine learning and emerging AI technologies, consistently achieving industry-leading satisfaction scores.</p>
+              </div>
+            </div>
+            <p class="matas-about-heading">Selected Case Study</p>
+            <div class="matas-about-case-study">
+              <p>In 2024, Sarah delivered "Launchpad for Women", a two-day cloud technology training event attended by over 1,500 participants across the EMEA region.</p>
+              <p>The programme introduced foundational cloud concepts and modern data workflows, combining technical instruction with practical learning paths designed to help participants understand how cloud technologies power today's data-driven organisations.</p>
+              <p>With women currently representing only around 20% of senior roles in technology, the initiative aimed to help close the knowledge gap by providing accessible training and practical insight into cloud technologies and data infrastructure.</p>
+              <p>The event was recognised as a significant initiative supporting the growth of women in the technology sector.</p>
+            </div>
+            <p class="matas-about-disclaimer">Work delivered by Sarah in a previous role.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <main class="main">
+    <h1 class="logo" aria-label="OFF / PIXEL">
+      <span class="logo-off">OFF</span><span class="logo-slash">/</span><span class="logo-pixel">PIXEL</span>
+    </h1>
+    <p class="tagline">Omnichannel marketing and data strategies that go beyond the brief</p>
+  </main>
+
+  <script>
+    (function () {
+      var eventsTrigger = document.getElementById('events-trigger');
+      var eventsReveal = document.getElementById('clients-reveal');
+      var dataTrigger = document.getElementById('data-trigger');
+      var dataReveal = document.getElementById('data-reveal');
+      var foundersTrigger = document.getElementById('founders-trigger');
+      var foundersReveal = document.getElementById('founders-reveal');
+      function showEvents() {
+        eventsTrigger.setAttribute('aria-expanded', 'true');
+        eventsReveal.setAttribute('aria-hidden', 'false');
+        dataTrigger.setAttribute('aria-expanded', 'false');
+        dataReveal.setAttribute('aria-hidden', 'true');
+        if (foundersTrigger && foundersReveal) closeFounders();
+      }
+      function showData() {
+        dataTrigger.setAttribute('aria-expanded', 'true');
+        dataReveal.setAttribute('aria-hidden', 'false');
+        eventsTrigger.setAttribute('aria-expanded', 'false');
+        eventsReveal.setAttribute('aria-hidden', 'true');
+        if (foundersTrigger && foundersReveal) closeFounders();
+      }
+      function showFounders() {
+        if (foundersTrigger && foundersReveal) {
+          foundersTrigger.setAttribute('aria-expanded', 'true');
+          foundersReveal.setAttribute('aria-hidden', 'false');
+          foundersReveal.classList.add('is-open');
+          eventsTrigger.setAttribute('aria-expanded', 'false');
+          eventsReveal.setAttribute('aria-hidden', 'true');
+          dataTrigger.setAttribute('aria-expanded', 'false');
+          dataReveal.setAttribute('aria-hidden', 'true');
+        }
+      }
+      function closeFounders() {
+        if (foundersTrigger && foundersReveal) {
+          foundersReveal.classList.remove('is-open');
+          foundersTrigger.setAttribute('aria-expanded', 'false');
+          foundersReveal.setAttribute('aria-hidden', 'true');
+          var ma = document.querySelector('.matas-about');
+          var sr = document.querySelector('.sarah-reveal');
+          if (ma) { ma.classList.remove('is-open'); ma.setAttribute('aria-hidden', 'true'); }
+          if (sr) { sr.classList.remove('is-open'); sr.setAttribute('aria-hidden', 'true'); }
+        }
+      }
+      function hideAll() {
+        eventsTrigger.setAttribute('aria-expanded', 'false');
+        eventsReveal.setAttribute('aria-hidden', 'true');
+        dataTrigger.setAttribute('aria-expanded', 'false');
+        dataReveal.setAttribute('aria-hidden', 'true');
+        if (foundersTrigger && foundersReveal && !foundersReveal.classList.contains('is-open')) {
+          foundersTrigger.setAttribute('aria-expanded', 'false');
+          foundersReveal.setAttribute('aria-hidden', 'true');
+        }
+      }
+      eventsTrigger.addEventListener('mouseenter', showEvents);
+      eventsTrigger.addEventListener('focus', showEvents);
+      eventsReveal.addEventListener('mouseenter', showEvents);
+      dataTrigger.addEventListener('mouseenter', showData);
+      dataTrigger.addEventListener('focus', showData);
+      dataReveal.addEventListener('mouseenter', showData);
+      if (foundersTrigger && foundersReveal) {
+        foundersTrigger.addEventListener('mouseenter', showFounders);
+        foundersTrigger.addEventListener('focus', showFounders);
+        foundersReveal.addEventListener('mouseenter', showFounders);
+      }
+      eventsTrigger.addEventListener('mouseleave', function () {
+        if (!eventsReveal.matches(':hover')) hideAll();
+      });
+      eventsReveal.addEventListener('mouseleave', hideAll);
+      dataTrigger.addEventListener('mouseleave', function () {
+        if (!dataReveal.matches(':hover')) hideAll();
+      });
+      dataReveal.addEventListener('mouseleave', hideAll);
+      if (foundersTrigger && foundersReveal) {
+        foundersTrigger.addEventListener('mouseleave', function () { /* stick: do not close on leave */ });
+        foundersReveal.addEventListener('mouseleave', function () { /* stick: do not close on leave */ });
+        foundersTrigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (foundersReveal.classList.contains('is-open')) {
+            closeFounders();
+          } else {
+            showFounders();
+          }
+        });
+        document.addEventListener('click', function (e) {
+          if (foundersReveal.classList.contains('is-open') && !foundersReveal.contains(e.target) && !foundersTrigger.contains(e.target)) {
+            closeFounders();
+          }
+        });
+      }
+      eventsTrigger.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showEvents(); }
+      });
+      dataTrigger.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showData(); }
+      });
+      if (foundersTrigger) {
+        foundersTrigger.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showFounders(); }
+        });
+      }
+    })();
+
+    (function () {
+      var contactTrigger = document.getElementById('contact-trigger');
+      var contactReveal = document.getElementById('contact-reveal');
+      contactTrigger.addEventListener('mouseenter', function () {
+        contactTrigger.setAttribute('aria-expanded', 'true');
+        contactReveal.setAttribute('aria-hidden', 'false');
+        contactReveal.classList.add('is-open');
+      });
+      contactTrigger.addEventListener('mouseleave', function () {
+        /* panel sticks until user clicks outside or clicks Contact again */
+      });
+      contactTrigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        contactReveal.classList.toggle('is-open');
+        contactTrigger.setAttribute('aria-expanded', contactReveal.classList.contains('is-open'));
+        contactReveal.setAttribute('aria-hidden', !contactReveal.classList.contains('is-open'));
+      });
+      contactReveal.addEventListener('mouseleave', function () {
+        if (!this.classList.contains('is-open')) {
+          contactTrigger.setAttribute('aria-expanded', 'false');
+          this.setAttribute('aria-hidden', 'true');
+        }
+      });
+      document.addEventListener('click', function (e) {
+        if (contactReveal.classList.contains('is-open') && !contactReveal.contains(e.target) && !contactTrigger.contains(e.target)) {
+          contactReveal.classList.remove('is-open');
+          contactTrigger.setAttribute('aria-expanded', 'false');
+          contactReveal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    })();
+
+    (function () {
+      var triggers = document.querySelectorAll('.corner-services .service-trigger');
+      triggers.forEach(function (trigger) {
+        var revealId = trigger.getAttribute('aria-controls');
+        var reveal = revealId ? document.getElementById(revealId) : null;
+        if (!reveal) return;
+        trigger.addEventListener('mouseenter', function () {
+          trigger.setAttribute('aria-expanded', 'true');
+          reveal.setAttribute('aria-hidden', 'false');
+        });
+        trigger.addEventListener('mouseleave', function () {
+          if (!reveal.matches(':hover')) {
+            trigger.setAttribute('aria-expanded', 'false');
+            reveal.setAttribute('aria-hidden', 'true');
+          }
+        });
+        reveal.addEventListener('mouseleave', function () {
+          trigger.setAttribute('aria-expanded', 'false');
+          reveal.setAttribute('aria-hidden', 'true');
+        });
+        trigger.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            reveal.classList.toggle('is-open');
+            trigger.setAttribute('aria-expanded', reveal.classList.contains('is-open'));
+            reveal.setAttribute('aria-hidden', !reveal.classList.contains('is-open'));
+          }
+        });
+      });
+    })();
+
+    (function () {
+      var foundersReveal = document.getElementById('founders-reveal');
+      var matasWrap = document.querySelector('.founders-name-matas-wrap');
+      var matasAbout = document.querySelector('.matas-about');
+      var sarahWrap = document.querySelector('.founders-name-sarah-wrap');
+      var sarahReveal = document.querySelector('.sarah-reveal');
+      var viewportMargin = 20;
+
+      function clampPopupToViewport(popup) {
+        if (!popup) return;
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            var rect = popup.getBoundingClientRect();
+            var nudge = 0;
+            if (rect.right > window.innerWidth - viewportMargin) {
+              nudge = window.innerWidth - viewportMargin - rect.right;
+            }
+            if (rect.left + nudge < viewportMargin) {
+              nudge = viewportMargin - rect.left;
+            }
+            popup.style.setProperty('--nudge-x', nudge + 'px');
+          });
+        });
+      }
+
+      function clearNudge(popup) {
+        if (popup) popup.style.removeProperty('--nudge-x');
+      }
+
+      function openMatas() {
+        if (matasAbout) {
+          if (foundersReveal) foundersReveal.classList.add('is-open');
+          matasAbout.classList.add('is-open');
+          matasAbout.setAttribute('aria-hidden', 'false');
+          if (sarahReveal) {
+            sarahReveal.classList.remove('is-open');
+            sarahReveal.setAttribute('aria-hidden', 'true');
+          }
+          clampPopupToViewport(matasAbout);
+        }
+      }
+      function closeMatas() {
+        if (matasAbout) {
+          matasAbout.classList.remove('is-open');
+          matasAbout.setAttribute('aria-hidden', 'true');
+          if (foundersReveal && sarahReveal && !sarahReveal.classList.contains('is-open')) {
+            foundersReveal.classList.remove('is-open');
+          }
+        }
+      }
+      function openSarah() {
+        if (sarahReveal) {
+          if (foundersReveal) foundersReveal.classList.add('is-open');
+          sarahReveal.classList.add('is-open');
+          sarahReveal.setAttribute('aria-hidden', 'false');
+          if (matasAbout) {
+            matasAbout.classList.remove('is-open');
+            matasAbout.setAttribute('aria-hidden', 'true');
+          }
+          clampPopupToViewport(sarahReveal);
+        }
+      }
+      function closeSarah() {
+        if (sarahReveal) {
+          sarahReveal.classList.remove('is-open');
+          sarahReveal.setAttribute('aria-hidden', 'true');
+          if (foundersReveal && matasAbout && !matasAbout.classList.contains('is-open')) {
+            foundersReveal.classList.remove('is-open');
+          }
+        }
+      }
+
+      if (matasWrap && matasAbout) {
+        matasWrap.addEventListener('mouseenter', openMatas);
+        matasAbout.addEventListener('mouseenter', openMatas);
+        matasWrap.addEventListener('mouseleave', function () {});
+        matasAbout.addEventListener('mouseleave', function () {});
+        var matasName = matasWrap.querySelector('.founders-name');
+        if (matasName) {
+          function matasToggle(e) {
+            if (e.type === 'touchend') e.preventDefault();
+            if (matasAbout.classList.contains('is-open')) closeMatas();
+            else openMatas();
+          }
+          matasName.addEventListener('click', matasToggle);
+          matasName.addEventListener('touchend', matasToggle, { passive: false });
+        }
+      }
+      if (sarahWrap && sarahReveal) {
+        sarahWrap.addEventListener('mouseenter', openSarah);
+        sarahReveal.addEventListener('mouseenter', openSarah);
+        sarahWrap.addEventListener('mouseleave', function () {});
+        sarahReveal.addEventListener('mouseleave', function () {});
+        var sarahName = sarahWrap.querySelector('.founders-name');
+        if (sarahName) {
+          function sarahToggle(e) {
+            if (e.type === 'touchend') e.preventDefault();
+            if (sarahReveal.classList.contains('is-open')) closeSarah();
+            else openSarah();
+          }
+          sarahName.addEventListener('click', sarahToggle);
+          sarahName.addEventListener('touchend', sarahToggle, { passive: false });
+        }
+      }
+      function handleCloseOutside(e) {
+        var t = e.target;
+        if (matasAbout && matasAbout.classList.contains('is-open') && !matasWrap.contains(t) && !matasAbout.contains(t)) closeMatas();
+        if (sarahReveal && sarahReveal.classList.contains('is-open') && !sarahWrap.contains(t) && !sarahReveal.contains(t)) closeSarah();
+      }
+      document.addEventListener('click', handleCloseOutside);
+      document.addEventListener('touchend', handleCloseOutside, { passive: true });
+
+      window.addEventListener('resize', function () {
+        if (matasAbout && (matasAbout.classList.contains('is-open') || (matasWrap && (matasWrap.matches(':hover') || matasAbout.matches(':hover'))))) clampPopupToViewport(matasAbout);
+        if (sarahReveal && (sarahReveal.classList.contains('is-open') || (sarahWrap && (sarahWrap.matches(':hover') || sarahReveal.matches(':hover'))))) clampPopupToViewport(sarahReveal);
+      });
+    })();
+
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('contact-name').value.trim();
+      var company = document.getElementById('contact-company').value.trim();
+      var url = document.getElementById('contact-url').value.trim();
+      var budget = document.getElementById('contact-budget').value;
+      var message = document.getElementById('contact-message').value.trim();
+      var body = 'Name: ' + name + '\n\nCompany: ' + company + '\n\nWebsite or Instagram URL: ' + url + '\n\nProject Budget: ' + budget + '\n\nMessage:\n' + message;
+      var mailto = 'mailto:hello@offpixel.co.uk?subject=Contact%20from%20OFF%20%2F%20PIXEL&body=' + encodeURIComponent(body);
+      window.location.href = mailto;
+    });
+  </script>
+</body>
+</html>
