@@ -26,6 +26,9 @@ body {
 }
 .corner a:hover { opacity: 1; }
 
+.corner-bottom-wrap {
+  display: contents;
+}
 .corner-contact { bottom: 4rem; right: 4rem; }
 .contact-trigger {
   cursor: pointer;
@@ -45,6 +48,8 @@ body {
   right: 4rem;
   width: 100%;
   max-width: 28rem;
+  max-height: calc(100vh - 6rem);
+  overflow-y: auto;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -58,41 +63,43 @@ body {
   visibility: visible;
   pointer-events: auto;
 }
-.contact-reveal-box {
-  padding: 2rem 2.25rem;
-  background: #F0C9A8;
-  border: 1px solid rgba(30, 24, 16, 0.15);
-  box-shadow: 0 0.5rem 2rem rgba(30, 24, 16, 0.06);
-  font-family: system-ui, sans-serif;
+.contact-reveal.is-open {
+  z-index: 10000;
 }
-.corner-services {
+
+.corner-focus {
   bottom: 4rem;
   left: 4rem;
+  z-index: 2;
+}
+.focus-line-break {
+  display: none;
+}
+.focus-sep,
+.focus-item {
   color: #1e1810;
-  z-index: 1;
+  opacity: 0.6;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
 }
-.services-row {
-  display: contents;
-}
-.corner-services:has(.service-trigger:hover),
-.corner-services:has(.service-reveal:hover) {
-  z-index: 9999;
-}
-.service-item {
-  display: inline;
-}
-.service-trigger {
-  cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.2s ease;
-}
-.service-trigger:hover {
+.focus-item:hover {
   opacity: 1;
 }
-.services-sep {
-  opacity: 0.5;
+.focus-strategy-wrap,
+.focus-paid-wrap,
+.focus-d2c-wrap,
+.focus-creative-wrap,
+.focus-data-wrap,
+.focus-governance-wrap {
+  display: inline;
 }
-.service-reveal {
+.focus-strategy-reveal,
+.focus-paid-reveal,
+.focus-d2c-reveal,
+.focus-creative-reveal,
+.focus-data-reveal,
+.focus-governance-reveal {
   position: fixed;
   bottom: 5.5rem;
   left: 4rem;
@@ -107,15 +114,38 @@ body {
   z-index: 9999;
   transform: translateY(0.5rem) scale(0.98);
 }
-.service-item:hover .service-reveal,
-.service-reveal:hover,
-.service-reveal.is-open {
+.focus-strategy-wrap:hover .focus-strategy-reveal,
+.focus-strategy-reveal:hover,
+.focus-paid-wrap:hover .focus-paid-reveal,
+.focus-paid-reveal:hover,
+.focus-d2c-wrap:hover .focus-d2c-reveal,
+.focus-d2c-reveal:hover,
+.focus-creative-wrap:hover .focus-creative-reveal,
+.focus-creative-reveal:hover,
+.focus-data-wrap:hover .focus-data-reveal,
+.focus-data-reveal:hover,
+.focus-governance-wrap:hover .focus-governance-reveal,
+.focus-governance-reveal:hover {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transform: translateY(0) scale(1);
 }
-.service-reveal-list {
+.corner-focus:has(.focus-strategy-wrap:hover),
+.corner-focus:has(.focus-strategy-reveal:hover),
+.corner-focus:has(.focus-paid-wrap:hover),
+.corner-focus:has(.focus-paid-reveal:hover),
+.corner-focus:has(.focus-d2c-wrap:hover),
+.corner-focus:has(.focus-d2c-reveal:hover),
+.corner-focus:has(.focus-creative-wrap:hover),
+.corner-focus:has(.focus-creative-reveal:hover),
+.corner-focus:has(.focus-data-wrap:hover),
+.corner-focus:has(.focus-data-reveal:hover),
+.corner-focus:has(.focus-governance-wrap:hover),
+.corner-focus:has(.focus-governance-reveal:hover) {
+  z-index: 9999;
+}
+.focus-reveal-list {
   margin: 0;
   padding: 0 0 0 1.25rem;
   list-style: disc;
@@ -123,12 +153,24 @@ body {
   font-size: 0.7rem;
   line-height: 1.6;
   color: #1e1810;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
-.service-reveal-list li {
+.focus-reveal-list li {
   margin-bottom: 0.35rem;
 }
-.service-reveal-list li:last-child {
+.focus-reveal-list li:last-child {
   margin-bottom: 0;
+}
+
+.contact-reveal-box {
+  position: sticky;
+  top: 0;
+  padding: 2rem 2.25rem;
+  background: #F0C9A8;
+  border: 1px solid rgba(30, 24, 16, 0.15);
+  box-shadow: 0 0.5rem 2rem rgba(30, 24, 16, 0.06);
+  font-family: system-ui, sans-serif;
 }
 .corner-clients:has(.founders-name-matas-wrap:hover),
 .corner-clients:has(.matas-about:hover),
@@ -238,14 +280,14 @@ body {
   grid-template-rows: auto auto auto;
   gap: 1rem 1.5rem;
   align-items: start;
-  transform: translateX(var(--nudge-x, 0));
+  transform: translate(var(--nudge-x, 0), var(--nudge-y, 0));
 }
 .founders-name-matas-wrap:hover .matas-about,
 .matas-about:hover,
 .matas-about.is-open {
   opacity: 1;
   visibility: visible;
-  transform: translateX(var(--nudge-x, 0));
+  transform: translate(var(--nudge-x, 0), var(--nudge-y, 0));
   pointer-events: auto;
 }
 .matas-about-top-row {
@@ -256,9 +298,11 @@ body {
   align-items: stretch;
 }
 .matas-about-photo {
-  width: 14rem;
+  width: 16rem;
+  min-height: 18rem;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
   display: block;
   opacity: 1;
 }
@@ -419,14 +463,14 @@ body {
   grid-template-rows: auto auto auto;
   gap: 1rem 1.5rem;
   align-items: start;
-  transform: translateY(-0.5rem) translateX(var(--nudge-x, 0)) scale(0.98);
+  transform: translateY(-0.5rem) translate(var(--nudge-x, 0), var(--nudge-y, 0)) scale(0.98);
 }
 .founders-name-sarah-wrap:hover .sarah-reveal,
 .sarah-reveal:hover,
 .sarah-reveal.is-open {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) translateX(var(--nudge-x, 0)) scale(1);
+  transform: translateY(0) translate(var(--nudge-x, 0), var(--nudge-y, 0)) scale(1);
   pointer-events: auto;
 }
 .founders-name-sarah-wrap {
@@ -574,6 +618,9 @@ body {
   word-wrap: break-word;
   animation: taglineIn 1s ease-out 0.3s both;
 }
+.tagline-br {
+  display: none;
+}
 .tagline-sub {
   font-family: system-ui, sans-serif;
   font-size: 0.85rem;
@@ -665,6 +712,9 @@ body {
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
+  .tagline-br {
+    display: block;
+  }
   .tagline-sub {
     max-width: 100%;
     overflow-wrap: break-word;
@@ -716,26 +766,12 @@ body {
   .contact-reveal-box {
     padding: 1.5rem 1.25rem;
   }
-  .corner-services {
-    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
-    left: calc(1.25rem + env(safe-area-inset-left, 0px));
-    right: calc(1.25rem + env(safe-area-inset-right, 0px));
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    max-width: calc(100vw - 2.5rem);
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-  .services-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .corner-services .service-item {
-    display: inline;
-  }
-  .service-reveal {
+  .focus-strategy-reveal,
+  .focus-paid-reveal,
+  .focus-d2c-reveal,
+  .focus-creative-reveal,
+  .focus-data-reveal,
+  .focus-governance-reveal {
     bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
     left: calc(1.25rem + env(safe-area-inset-left, 0px));
     right: calc(1.25rem + env(safe-area-inset-right, 0px));
@@ -743,8 +779,16 @@ body {
     max-width: none;
     padding: 1rem 1.25rem;
   }
-  .service-reveal-list {
+  .focus-reveal-list {
     font-size: 0.65rem;
+  }
+  .corner-focus {
+    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    left: calc(1.25rem + env(safe-area-inset-left, 0px));
+    right: calc(1.25rem + env(safe-area-inset-right, 0px));
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    max-width: calc(100vw - 2.5rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
   }
   .corner-clients {
     top: calc(1.25rem + env(safe-area-inset-top, 0px));
@@ -754,6 +798,8 @@ body {
     letter-spacing: 0.15em;
     max-width: calc(100vw - 2.5rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
   }
+  .focus-sep,
+  .focus-item,
   .work-label,
   .work-sep,
   .work-events-trigger,
@@ -818,10 +864,11 @@ body {
   }
   .matas-about-photo {
     width: 100%;
-    max-height: 12rem;
-    min-height: 8rem;
+    max-height: 16rem;
+    min-height: 11rem;
     height: auto;
     object-fit: cover;
+    object-position: top center;
     display: block;
   }
   .matas-about-bio {
@@ -859,48 +906,158 @@ body {
     font-size: 0.75rem;
     letter-spacing: 0.12em;
   }
+  .tagline-br {
+    display: block;
+  }
   .corner-contact,
-  .corner-services,
+  .corner-focus,
   .corner-clients {
     font-size: 0.55rem;
     letter-spacing: 0.12em;
   }
-  .corner-contact {
-    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-    right: calc(1rem + env(safe-area-inset-right, 0px));
-  }
-  .corner-services {
+  .corner-bottom-wrap {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: end;
+    position: fixed;
     bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
     left: calc(1rem + env(safe-area-inset-left, 0px));
     right: calc(1rem + env(safe-area-inset-right, 0px));
+    z-index: 2;
+    pointer-events: none;
+    gap: 0 0.5rem;
+  }
+  .corner-bottom-wrap > * {
+    pointer-events: auto;
+  }
+  .corner-contact {
+    position: static;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+  }
+  .corner-bottom-wrap .contact-trigger {
+    min-height: auto;
+    padding: 0.2em 0;
+    line-height: inherit;
+  }
+  .corner-focus {
+    position: static;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    grid-column: 1;
+    grid-row: 1 / -1;
+    min-width: 0;
+  }
+  .focus-line-break {
+    display: block;
   }
   .corner-clients {
     top: calc(1rem + env(safe-area-inset-top, 0px));
     left: calc(1rem + env(safe-area-inset-left, 0px));
     right: calc(1rem + env(safe-area-inset-right, 0px));
+    z-index: 10;
+    pointer-events: auto;
+  }
+  .corner-clients .work-events-trigger,
+  .corner-clients .work-data-trigger,
+  .corner-clients .work-founders-trigger,
+  .corner-clients .founders-name {
+    cursor: pointer;
+    pointer-events: auto;
   }
   .contact-reveal {
+    top: calc(3.5rem + env(safe-area-inset-top, 0px));
     bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
     right: calc(1rem + env(safe-area-inset-right, 0px));
     left: calc(1rem + env(safe-area-inset-left, 0px));
     width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-height: none;
+    height: calc(100vh - 7rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
-  .service-reveal {
+  .contact-reveal-box {
+    padding: 0.75rem 1rem;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .contact-reveal .contact-heading {
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+  }
+  .contact-form label {
+    font-size: 0.6rem;
+    margin-bottom: 0.2rem;
+  }
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    padding: 0.35rem 0;
+    margin-bottom: 0.5rem;
+    min-height: 2rem;
+    font-size: 16px;
+  }
+  .contact-form button {
+    min-height: 2.25rem;
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.25rem;
+  }
+  .focus-strategy-reveal,
+  .focus-paid-reveal,
+  .focus-d2c-reveal,
+  .focus-creative-reveal,
+  .focus-data-reveal,
+  .focus-governance-reveal {
+    top: auto;
     bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
     left: calc(1rem + env(safe-area-inset-left, 0px));
     right: calc(1rem + env(safe-area-inset-right, 0px));
     width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    height: auto;
+    max-height: calc(100vh - 7rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    padding: 0.5rem 0.75rem;
+    overflow-y: auto;
+  }
+  .focus-reveal-list {
+    padding-left: 1rem;
+    font-size: 0.6rem;
+  }
+  .focus-reveal-list li {
+    margin-bottom: 0.2rem;
+  }
+  .focus-reveal-list li:last-child {
+    margin-bottom: 0;
   }
   .clients-reveal,
   .data-reveal {
     top: calc(3.5rem + env(safe-area-inset-top, 0px));
+    bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
     left: calc(1rem + env(safe-area-inset-left, 0px));
     right: calc(1rem + env(safe-area-inset-right, 0px));
     width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-height: calc(100vh - 7rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     padding: 1rem 1.25rem;
+    overflow-y: auto;
   }
   .clients-reveal {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem 0.75rem;
+  }
+  .clients-reveal img {
+    max-width: 5rem;
+    max-height: 2.25rem;
+    width: auto;
+    height: auto;
+    object-fit: contain;
   }
   .founders-fork-svg {
     width: 4rem;
@@ -915,12 +1072,49 @@ body {
     left: 1rem;
     right: 1rem;
     width: calc(100vw - 2rem);
-    padding: 1rem;
+    max-width: none;
+    padding: 0.75rem 1rem;
+    font-size: 0.55rem;
+    max-height: calc(100vh - 7rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    gap: 0.5rem 0.75rem;
+    overflow-y: auto;
+  }
+  .matas-about-top-row {
+    gap: 0.5rem;
+    grid-template-rows: auto minmax(0, 1fr);
   }
   .matas-about-photo {
-    min-height: 6rem;
+    min-height: 8rem;
+    max-height: 11rem;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: top center;
   }
-  .service-trigger,
+  .matas-about-name {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+  .matas-about-bio p,
+  .matas-about-case-study p,
+  .sarah-reveal .matas-about-bio p,
+  .sarah-reveal .matas-about-case-study p {
+    font-size: 0.55rem;
+    line-height: 1.35;
+    margin-bottom: 0.25rem;
+  }
+  .matas-about-bio p:last-of-type,
+  .matas-about-case-study p:last-of-type {
+    margin-bottom: 0;
+  }
+  .matas-about-heading {
+    font-size: 0.52rem;
+    margin: 0.2rem 0 0 0;
+  }
+  .matas-about-disclaimer {
+    font-size: 0.5rem;
+    margin: 0.2rem 0 0 0;
+  }
   .work-events-trigger,
   .work-data-trigger,
   .work-founders-trigger,

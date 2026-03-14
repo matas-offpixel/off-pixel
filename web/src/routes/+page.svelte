@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
 
   let contactOpen = false;
   let foundersOpen = false;
@@ -39,7 +39,11 @@
     matasOpen = true;
     sarahOpen = false;
     foundersOpen = true;
-    requestAnimationFrame(() => requestAnimationFrame(() => clampPopupToViewport(matasEl)));
+    if (matasEl) {
+      matasEl.style.setProperty('--nudge-x', '0px');
+      matasEl.style.setProperty('--nudge-y', '0px');
+    }
+    tick().then(() => requestAnimationFrame(() => clampPopupToViewport(matasEl)));
   }
 
   function closeMatas() {
@@ -51,7 +55,11 @@
     sarahOpen = true;
     matasOpen = false;
     foundersOpen = true;
-    requestAnimationFrame(() => requestAnimationFrame(() => clampPopupToViewport(sarahEl)));
+    if (sarahEl) {
+      sarahEl.style.setProperty('--nudge-x', '0px');
+      sarahEl.style.setProperty('--nudge-y', '0px');
+    }
+    tick().then(() => requestAnimationFrame(() => clampPopupToViewport(sarahEl)));
   }
 
   function closeSarah() {
@@ -62,10 +70,14 @@
   function clampPopupToViewport(popup) {
     if (!popup) return;
     const rect = popup.getBoundingClientRect();
-    let nudge = 0;
-    if (rect.right > window.innerWidth - VIEWPORT_MARGIN) nudge = window.innerWidth - VIEWPORT_MARGIN - rect.right;
-    if (rect.left + nudge < VIEWPORT_MARGIN) nudge = VIEWPORT_MARGIN - rect.left;
-    popup.style.setProperty('--nudge-x', nudge + 'px');
+    let nudgeX = 0;
+    let nudgeY = 0;
+    if (rect.right > window.innerWidth - VIEWPORT_MARGIN) nudgeX = window.innerWidth - VIEWPORT_MARGIN - rect.right;
+    if (rect.left + nudgeX < VIEWPORT_MARGIN) nudgeX = VIEWPORT_MARGIN - rect.left;
+    if (rect.bottom > window.innerHeight - VIEWPORT_MARGIN) nudgeY = window.innerHeight - VIEWPORT_MARGIN - rect.bottom;
+    if (rect.top + nudgeY < VIEWPORT_MARGIN) nudgeY = VIEWPORT_MARGIN - rect.top;
+    popup.style.setProperty('--nudge-x', nudgeX + 'px');
+    popup.style.setProperty('--nudge-y', nudgeY + 'px');
   }
 
   function handleContactSubmit(e) {
@@ -109,115 +121,115 @@
 
 <svelte:window />
 
-<div class="corner corner-contact">
-  <button type="button" class="contact-trigger" aria-expanded={contactOpen} aria-controls="contact-reveal" id="contact-trigger" on:click|preventDefault={toggleContact}>Contact</button>
-  <div class="contact-reveal" id="contact-reveal" class:is-open={contactOpen} aria-hidden={!contactOpen}>
-    <div class="contact-reveal-box">
-      <h2 class="contact-heading">Contact</h2>
-      <form class="contact-form" id="contact-form" on:submit={handleContactSubmit}>
-        <label for="contact-name">Name</label>
-        <input type="text" id="contact-name" name="name" placeholder="Your name" required>
-        <label for="contact-company">Company</label>
-        <input type="text" id="contact-company" name="company" placeholder="Company name">
-        <label for="contact-url">Website or Instagram URL</label>
-        <input type="url" id="contact-url" name="url" placeholder="https://…">
-        <label for="contact-budget">Project Budget</label>
-        <select id="contact-budget" name="budget">
-          <option value="">Select range</option>
-          <option value="Under £5k">Under £5k</option>
-          <option value="£5k – £15k">£5k – £15k</option>
-          <option value="£15k – £50k">£15k – £50k</option>
-          <option value="£50k+">£50k+</option>
-        </select>
-        <label for="contact-message">Message</label>
-        <textarea id="contact-message" name="message" placeholder="Tell us about your project" required></textarea>
-        <button type="submit">Send Message</button>
-      </form>
+<div class="corner-bottom-wrap">
+  <div class="corner corner-contact" on:mouseenter={() => contactOpen = true}>
+    <button type="button" class="contact-trigger" aria-expanded={contactOpen} aria-controls="contact-reveal" id="contact-trigger" on:click|preventDefault={toggleContact}>Contact</button>
+    <div class="contact-reveal" id="contact-reveal" class:is-open={contactOpen} aria-hidden={!contactOpen}>
+      <div class="contact-reveal-box">
+        <h2 class="contact-heading">Contact</h2>
+        <form class="contact-form" id="contact-form" on:submit={handleContactSubmit}>
+          <label for="contact-name">Name</label>
+          <input type="text" id="contact-name" name="name" placeholder="Your name" required>
+          <label for="contact-company">Company</label>
+          <input type="text" id="contact-company" name="company" placeholder="Company name">
+          <label for="contact-url">Website or Instagram URL</label>
+          <input type="url" id="contact-url" name="url" placeholder="https://…">
+          <label for="contact-budget">Project Budget</label>
+          <select id="contact-budget" name="budget">
+            <option value="">Select range</option>
+            <option value="Under £5k">Under £5k</option>
+            <option value="£5k – £15k">£5k – £15k</option>
+            <option value="£15k – £50k">£15k – £50k</option>
+            <option value="£50k+">£50k+</option>
+          </select>
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" placeholder="Tell us about your project" required></textarea>
+          <button type="submit">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="corner corner-focus">
+  <div class="focus-strategy-wrap">
+    <span class="focus-item">STRATEGY</span>
+    <div class="focus-strategy-reveal" aria-hidden="true">
+      <ul class="focus-reveal-list">
+        <li>AUDIENCE &amp; MARKET SEGMENTATION</li>
+        <li>PRE-SALE AND LAUNCH STRATEGY</li>
+        <li>ALWAYS-ON FUNNEL STRATEGY</li>
+        <li>BRAND BUILDING &amp; AWARENESS</li>
+        <li>SALES ACCELERATION &amp; DEMAND SPIKES</li>
+      </ul>
+    </div>
+  </div>
+  <span class="focus-sep"> · </span>
+  <div class="focus-paid-wrap">
+    <span class="focus-item">PAID MEDIA</span>
+    <div class="focus-paid-reveal" aria-hidden="true">
+      <ul class="focus-reveal-list">
+        <li>META &amp; TIKTOK PAID SOCIAL</li>
+        <li>PROGRAMMATIC &amp; DISPLAY</li>
+        <li>SEARCH &amp; SHOPPING</li>
+        <li>PARTNERSHIP &amp; AFFILIATE</li>
+        <li>RETARGETING &amp; CONVERSION OPTIMISATION</li>
+      </ul>
+    </div>
+  </div>
+  <span class="focus-sep"> · </span>
+  <div class="focus-d2c-wrap">
+    <span class="focus-item">D2C</span>
+    <div class="focus-d2c-reveal" aria-hidden="true">
+      <ul class="focus-reveal-list">
+        <li>D2C CAMPAIGN STRATEGY</li>
+        <li>CUSTOMER DATA CAPTURE &amp; SEGMENTATION</li>
+        <li>EMAIL &amp; WHATSAPP AUTOMATION</li>
+        <li>LOYALTY &amp; RETENTION PROGRAMMES</li>
+        <li>COMMUNITY GROWTH</li>
+      </ul>
+    </div>
+  </div>
+  <br class="focus-line-break">
+  <span class="focus-sep"> · </span>
+  <div class="focus-creative-wrap">
+    <span class="focus-item">CREATIVE</span>
+    <div class="focus-creative-reveal" aria-hidden="true">
+      <ul class="focus-reveal-list">
+        <li>CAMPAIGN CONCEPT DEVELOPMENT</li>
+        <li>PERFORMANCE-LED CREATIVE IDEATION</li>
+        <li>UGC-DRIVEN CREATIVE VARIATION</li>
+        <li>TEMPLATE-BASED RAPID ITERATION</li>
+        <li>TREND-DRIVEN CREATIVE INNOVATION</li>
+      </ul>
+    </div>
+  </div>
+  <span class="focus-sep"> · </span>
+  <div class="focus-data-wrap">
+    <span class="focus-item">DATA</span>
+    <div class="focus-data-reveal" aria-hidden="true">
+      <ul class="focus-reveal-list">
+        <li>MARKETING PERFORMANCE ANALYTICS</li>
+        <li>DATA MODELLING &amp; ATTRIBUTION INSIGHTS</li>
+        <li>LOOKER / MODERN BI TOOLS</li>
+        <li>CUSTOMER DATA STRATEGY</li>
+        <li>AI-ASSISTED MARKETING INSIGHTS</li>
+      </ul>
+    </div>
+  </div>
+  <span class="focus-sep"> · </span>
+  <div class="focus-governance-wrap">
+    <span class="focus-item">GOVERNANCE</span>
+    <div class="focus-governance-reveal" aria-hidden="true">
+      <ul class="focus-reveal-list">
+        <li>DATA GOVERNANCE FRAMEWORKS</li>
+        <li>DATA QUALITY &amp; LINEAGE STANDARDS</li>
+        <li>ENTERPRISE DATA DICTIONARIES</li>
+        <li>REGULATORY DATA COMPLIANCE</li>
+        <li>DATA OWNERSHIP &amp; ACCOUNTABILITY MODELS</li>
+      </ul>
     </div>
   </div>
 </div>
-
-  <div class="corner corner-services">
-  <div class="services-row services-row-1">
-    <div class="service-item">
-      <span class="service-trigger" id="strategy-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="strategy-reveal">Strategy</span>
-      <div class="service-reveal" id="strategy-reveal" aria-hidden="true">
-        <ul class="service-reveal-list">
-          <li>Audience &amp; market segmentation</li>
-          <li>Pre-sale and launch strategy</li>
-          <li>Always-on campaign strategy</li>
-          <li>Brand building &amp; awareness campaigns</li>
-          <li>Sales acceleration &amp; demand spikes</li>
-        </ul>
-      </div>
-    </div>
-    <span class="services-sep"> · </span>
-    <div class="service-item">
-      <span class="service-trigger" id="paid-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="paid-reveal">Paid Media</span>
-      <div class="service-reveal" id="paid-reveal" aria-hidden="true">
-        <ul class="service-reveal-list">
-          <li>Meta &amp; TikTok paid social</li>
-          <li>Programmatic &amp; display</li>
-          <li>Search &amp; shopping</li>
-          <li>Partnership &amp; affiliate</li>
-          <li>Retargeting &amp; conversion optimisation</li>
-        </ul>
-      </div>
-    </div>
-    <span class="services-sep"> · </span>
-    <div class="service-item">
-      <span class="service-trigger" id="d2c-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="d2c-reveal">D2C</span>
-      <div class="service-reveal" id="d2c-reveal" aria-hidden="true">
-        <ul class="service-reveal-list">
-          <li>D2C campaign strategy</li>
-          <li>Customer data capture &amp; CRM</li>
-          <li>Email &amp; WhatsApp automation</li>
-          <li>Loyalty &amp; retention programmes</li>
-          <li>Community growth</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="services-row services-row-2">
-    <div class="service-item">
-      <span class="service-trigger" id="creative-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="creative-reveal">Creative</span>
-      <div class="service-reveal" id="creative-reveal" aria-hidden="true">
-        <ul class="service-reveal-list">
-          <li>Campaign concept development</li>
-          <li>Performance-led creative ideation</li>
-          <li>UGC-driven creative variation</li>
-          <li>Template-based rapid iteration</li>
-          <li>Trend-driven creative innovation</li>
-        </ul>
-      </div>
-    </div>
-    <span class="services-sep"> · </span>
-    <div class="service-item">
-      <span class="service-trigger" id="data-service-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="data-service-reveal">Data</span>
-      <div class="service-reveal" id="data-service-reveal" aria-hidden="true">
-        <ul class="service-reveal-list">
-          <li>Marketing performance analytics</li>
-          <li>Data modelling &amp; attribution insights</li>
-          <li>Looker / modern BI tools</li>
-          <li>Customer data strategy</li>
-          <li>AI-assisted marketing insights</li>
-        </ul>
-      </div>
-    </div>
-    <span class="services-sep"> · </span>
-    <div class="service-item">
-      <span class="service-trigger" id="governance-trigger" role="button" tabindex="0" aria-expanded="false" aria-controls="governance-reveal">Governance</span>
-      <div class="service-reveal" id="governance-reveal" aria-hidden="true">
-        <ul class="service-reveal-list">
-          <li>Data governance frameworks</li>
-          <li>Data quality &amp; lineage standards</li>
-          <li>Enterprise data dictionaries</li>
-          <li>Regulatory data compliance</li>
-          <li>Data ownership &amp; accountability models</li>
-        </ul>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div class="corner corner-clients">
@@ -269,14 +281,14 @@
     </div>
   </div>
   <span class="work-sep"> · </span>
-  <div class="work-founders-wrap">
+  <div class="work-founders-wrap" on:mouseenter={() => foundersOpen = true}>
     <span class="work-founders-trigger" id="founders-trigger" role="button" tabindex="0" aria-expanded={foundersOpen} aria-controls="founders-reveal" on:click|preventDefault={() => foundersOpen = !foundersOpen}>Founders</span>
     <div class="founders-reveal" id="founders-reveal" class:is-open={foundersOpen} aria-hidden={!foundersOpen}>
       <svg class="founders-fork-svg" viewBox="0 0 80 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M40 0v16 M40 16L8 44 M40 16L72 44" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div class="founders-names">
-        <div class="founders-name-matas-wrap">
+        <div class="founders-name-matas-wrap" on:mouseenter={() => openMatas()}>
           <span class="founders-name" role="button" tabindex="0" on:click|preventDefault={() => matasOpen ? closeMatas() : openMatas()} on:touchend|preventDefault={() => matasOpen ? closeMatas() : openMatas()}>Matas</span>
           <div class="matas-about" class:is-open={matasOpen} aria-hidden={!matasOpen} bind:this={matasEl}>
             <div class="matas-about-top-row">
@@ -296,7 +308,7 @@
             <p class="matas-about-disclaimer">Work delivered by Matas in a previous role.</p>
           </div>
         </div>
-        <div class="founders-name-sarah-wrap">
+        <div class="founders-name-sarah-wrap" on:mouseenter={() => openSarah()}>
           <span class="founders-name" role="button" tabindex="0" on:click|preventDefault={() => sarahOpen ? closeSarah() : openSarah()} on:touchend|preventDefault={() => sarahOpen ? closeSarah() : openSarah()}>Sarah</span>
           <div class="sarah-reveal" class:is-open={sarahOpen} aria-hidden={!sarahOpen} bind:this={sarahEl}>
             <div class="matas-about-top-row">
@@ -326,5 +338,5 @@
   <h1 class="logo" aria-label="OFF / PIXEL">
     <span class="logo-off">OFF</span><span class="logo-slash">/</span><span class="logo-pixel">PIXEL</span>
   </h1>
-  <p class="tagline">Omnichannel marketing and data strategies that go beyond the brief</p>
+  <p class="tagline">Omnichannel marketing<br class="tagline-br"> and data strategies that<br class="tagline-br"> go beyond the brief</p>
 </main>
