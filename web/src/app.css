@@ -1069,27 +1069,49 @@ body {
   }
   .matas-about,
   .sarah-reveal {
-    left: 1rem;
-    right: 1rem;
-    width: calc(100vw - 2rem);
+    position: fixed;
+    top: calc(7rem + env(safe-area-inset-top, 0px));
+    left: calc(1rem + env(safe-area-inset-left, 0px));
+    right: calc(1rem + env(safe-area-inset-right, 0px));
+    bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
+    width: auto;
     max-width: none;
+    max-height: none;
+    margin-top: 0;
     padding: 0.75rem 1rem;
     font-size: 0.55rem;
-    max-height: calc(100vh - 7rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     gap: 0.5rem 0.75rem;
     overflow-y: auto;
+    transition: none;
+    z-index: 8;
+  }
+  .matas-about.is-open,
+  .sarah-reveal.is-open,
+  .matas-about:hover,
+  .sarah-reveal:hover {
+    transform: none;
+    transition: none;
   }
   .matas-about-top-row {
-    gap: 0.5rem;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-columns: minmax(4.5rem, 28%) 1fr;
+    grid-template-rows: auto;
+    gap: 0.5rem 0.75rem;
+    align-items: start;
   }
   .matas-about-photo {
-    min-height: 8rem;
-    max-height: 11rem;
     width: 100%;
+    max-width: 6rem;
     height: auto;
-    object-fit: cover;
+    max-height: 8rem;
+    min-height: 0;
+    object-fit: contain;
     object-position: top center;
+    display: block;
+  }
+  .matas-about-bio {
+    grid-column: 2;
+    min-width: 0;
+    align-self: start;
   }
   .matas-about-name {
     font-size: 0.75rem;
