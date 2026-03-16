@@ -309,6 +309,7 @@
       <img src="/images/clients/tokyonights.svg" alt="Tokyo Nights" width="200" height="42" />
       <img src="/images/clients/4thefans.svg" alt="4 The Fans" width="200" height="42" />
       <img src="/images/clients/junction2.svg" alt="Junction 2" width="200" height="42" />
+      <img src="/images/clients/boudica.svg" alt="Boudica" width="200" height="42" />
     </div>
   </div>
   <span class="work-sep"> · </span>
