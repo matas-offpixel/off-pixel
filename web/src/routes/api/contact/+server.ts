@@ -9,12 +9,13 @@ export async function POST({ request }: { request: Request }) {
     const data = await request.formData();
 
     const name = String(data.get('name') ?? '').trim();
+    const email = String(data.get('email') ?? '').trim();
     const company = String(data.get('company') ?? '').trim();
     const url = String(data.get('url') ?? '').trim();
     const budget = String(data.get('budget') ?? '').trim();
     const message = String(data.get('message') ?? '').trim();
 
-    if (!name || !message) {
+    if (!name || !email || !message) {
       return json({ success: false, error: 'Missing required fields.' }, { status: 400 });
     }
 
@@ -26,10 +27,11 @@ export async function POST({ request }: { request: Request }) {
       from: 'Off Pixel <hello@offpixel.co.uk>',
       to: 'hello@offpixel.co.uk',
       subject: `New contact form submission from ${name}`,
-      replyTo: 'hello@offpixel.co.uk',
+      replyTo: email,
       html: `
         <h2>New website enquiry</h2>
         <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
         <p><strong>Company:</strong> ${escapeHtml(company || '—')}</p>
         <p><strong>Website / Instagram:</strong> ${escapeHtml(url || '—')}</p>
         <p><strong>Budget:</strong> ${escapeHtml(budget || '—')}</p>

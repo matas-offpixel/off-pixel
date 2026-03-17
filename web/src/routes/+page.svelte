@@ -168,6 +168,9 @@
           <label for="contact-name">Name</label>
           <input type="text" id="contact-name" name="name" placeholder="Your name" required />
 
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" name="email" placeholder="you@company.com" required />
+
           <label for="contact-company">Company</label>
           <input type="text" id="contact-company" name="company" placeholder="Company name" />
 
