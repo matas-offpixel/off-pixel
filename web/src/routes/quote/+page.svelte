@@ -90,10 +90,6 @@
           <span class="output-label">Show Size</span>
           <span class="output-value">{showSize} <span class="output-detail">({focusVariables} variables in focus)</span></span>
         </div>
-        <div class="output-row">
-          <span class="output-label">Fee Cap</span>
-          <span class="output-value">{formatCurrency(feeCap)}</span>
-        </div>
         <div class="output-row highlight">
           <span class="output-label">Base Fee</span>
           <span class="output-value">{formatCurrency(baseFee)}</span>
@@ -418,5 +414,7 @@
     .form-grid { grid-template-columns: 1fr; }
     .notes-content,
     .terms-content { grid-template-columns: 1fr; gap: 0; }
+    .notes-col + .notes-col,
+    .terms-col + .terms-col { margin-top: 1.5rem; }
   }
 </style>
