@@ -19,11 +19,11 @@
 
   $: rawFee = pricingModel === '% of Budget'
     ? (serviceTier === 'Ads' ? budget * 0.18
-      : serviceTier === 'Ads + D2C' ? budget * 0.22
+      : serviceTier === 'Ads + D2C or Creative' ? budget * 0.22
       : serviceTier === 'Ads + D2C + Creative' ? budget * 0.25
       : 0)
     : (serviceTier === 'Ads' ? capacity * 0.7
-      : serviceTier === 'Ads + D2C' ? capacity * 0.8
+      : serviceTier === 'Ads + D2C or Creative' ? capacity * 0.8
       : serviceTier === 'Ads + D2C + Creative' ? capacity * 0.9
       : 0);
 
@@ -65,7 +65,7 @@
           <span>Service Tier</span>
           <select bind:value={serviceTier}>
             <option value="Ads">Ads</option>
-            <option value="Ads + D2C">Ads + D2C</option>
+            <option value="Ads + D2C or Creative">Ads + D2C or Creative</option>
             <option value="Ads + D2C + Creative">Ads + D2C + Creative</option>
           </select>
         </label>
