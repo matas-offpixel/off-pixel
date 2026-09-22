@@ -4,7 +4,7 @@
   let serviceTier = 'Ads';
   let soldOut = 'Yes';
 
-  $: feeCap = capacity > 19000 ? 5000 : capacity > 14000 ? 4500 : 4000;
+  $: feeCap = capacity >= 19000 ? 10000 : capacity >= 10000 ? 8000 : capacity >= 4000 ? 6000 : 4000;
   $: isLargeShow = capacity >= 4000 || budget >= 14000;
   $: showSize =
     capacity >= 10000 ? 'Xtra Large' :
@@ -131,7 +131,7 @@
         <h3>Pricing</h3>
         <ul>
           <li>Minimum fee: £750</li>
-          <li>Fee cap: £4,000 (default) / £4,500 (&gt;14,000 cap) / £5,000 (&gt;19,000 cap)</li>
+          <li>Fee cap: £4,000 (&lt;4,000 cap) / £6,000 (4,000–9,999 cap) / £8,000 (10,000–18,999 cap) / £10,000 (19,000+ cap)</li>
           <li>Large show threshold: Capacity ≥ 4,000 OR Budget ≥ £14,000</li>
           <li>Sell-out bonus: £0.10 per ticket (if Sold Out = Yes)</li>
         </ul>
